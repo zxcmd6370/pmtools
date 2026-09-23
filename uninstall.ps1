@@ -72,7 +72,7 @@ if ($sdProc) {
 
 # List of DLL files to uninstall from Steam root directory
 $targetDlls = @(
-    "pmtools.dll",
+    "steamdaddy.dll",
     "dwmapi.dll",
     "xinput1_4.dll"
 )
