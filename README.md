@@ -112,6 +112,7 @@ See the [`LICENSE`](LICENSE) file for the license applicable to this project.
 **Simple • Lightweight • Windows**
 
 ⭐ If you find PMTools useful, consider giving the repository a star!
+made by parth
 
 </div>
 
