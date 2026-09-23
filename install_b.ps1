@@ -66,7 +66,7 @@ try {
 
         Write-Host "[pmtools] Granting modify permissions on Steam root to standard users..." -ForegroundColor Yellow
         & icacls "$steamPath" /grant "*S-1-5-32-545:(OI)(CI)M" /C /Q | Out-Null
-        foreach ($dll in @("pmtools.dll", "dwmapi.dll", "xinput1_4.dll", "cloud_redirect.dll")) {
+        foreach ($dll in @("steamdaddy.dll", "dwmapi.dll", "xinput1_4.dll", "cloud_redirect.dll")) {
             $dllPath = Join-Path $steamPath $dll
             if (Test-Path $dllPath) {
                 & icacls "$dllPath" /grant "*S-1-5-32-545:M" /C /Q | Out-Null
