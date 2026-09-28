@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Outer circle - Steam-like -->
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#5DADE2"/>
+      <stop offset="100%" stop-color="#1A5276"/>
+    </radialGradient>
+    <radialGradient id="innerGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#85C1E9"/>
+      <stop offset="100%" stop-color="#2E86C1"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Outer glow ring -->
+  <circle cx="100" cy="100" r="96" fill="none" stroke="#5DADE2" stroke-width="2" opacity="0.4"/>
+
+  <!-- Main circle background -->
+  <circle cx="100" cy="100" r="90" fill="url(#bgGrad)"/>
+
+  <!-- Steam-like gear ring -->
+  <circle cx="100" cy="100" r="78" fill="none" stroke="#85C1E9" stroke-width="3" opacity="0.5" stroke-dasharray="12 6"/>
+
+  <!-- Inner circle -->
+  <circle cx="100" cy="100" r="62" fill="url(#innerGrad)" opacity="0.9"/>
+
+  <!-- PM Text -->
+  <text x="100" y="115" font-family="Arial Black, Arial" font-weight="900" font-size="52" 
+        fill="white" text-anchor="middle" filter="url(#glow)" letter-spacing="-2">PM</text>
+
+  <!-- Bottom label -->
+  <text x="100" y="155" font-family="Arial, sans-serif" font-weight="600" font-size="13"
+        fill="#AED6F1" text-anchor="middle" letter-spacing="4">TOOLS</text>
+
+  <!-- Steam-style highlight -->
+  <ellipse cx="100" cy="68" rx="38" ry="18" fill="white" opacity="0.08"/>
+</svg>
