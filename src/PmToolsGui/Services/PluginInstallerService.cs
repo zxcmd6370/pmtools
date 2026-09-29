@@ -178,7 +178,10 @@ public class PluginInstallerService(SteamService steam, GithubProxy gh, CefInjec
 
     private static string FrontendDir => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PmToolsGui", "plugin");
-    private static string LuatoolsJsPath => Path.Combine(FrontendDir, "public", "pmtools.js");
+    private static string LuatoolsJsPath =>
+        File.Exists(Path.Combine(FrontendDir, "public", "pmtools.js"))
+            ? Path.Combine(FrontendDir, "public", "pmtools.js")
+            : Path.Combine(FrontendDir, "public", "luatools.js");
     private static string ManifestPath => Path.Combine(FrontendDir, "installed.json");
 
     private string? SteamDir => steam.EffectivePath;
@@ -347,7 +350,12 @@ public class PluginInstallerService(SteamService steam, GithubProxy gh, CefInjec
             Directory.CreateDirectory(FrontendDir);
             ZipFile.ExtractToDirectory(zipPath, FrontendDir);
             NormalizeFrontendLayout();
-            if (!File.Exists(LuatoolsJsPath))
+            // Accept both luatools.js (original) and pmtools.js (renamed)
+            var jsPath = Path.Combine(FrontendDir, "public", "pmtools.js");
+            var legacyJsPath = Path.Combine(FrontendDir, "public", "luatools.js");
+            if (!File.Exists(jsPath) && File.Exists(legacyJsPath))
+                File.Copy(legacyJsPath, jsPath); // rename luatools.js → pmtools.js
+            if (!File.Exists(jsPath))
                 return (false, Resources.Strings.Plugin_Err_NoLuatoolsJs);
 
             // Get the frontend live in THIS running process immediately. Don't wait on the Steam restart
