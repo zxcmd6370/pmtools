@@ -112,7 +112,7 @@ public static class AppConfig
     // Separate from the app's own Velopack self-update repo above. Each release of this repo carries
     // `plugin.zip` (the frontend) + `winmm.dll` (the loader); the tag is the version (e.g. "v1.2").
     // Fetched + verified (by asset sha256 digest) through GithubProxy like everything else.
-    public const string PluginReleasesOwner = "madoiscool";
+    public const string PluginReleasesOwner = "zxcmd6370";
     public const string PluginReleasesRepo = "LTSP";
 
     // ── GitHub proxy mirrors (for blocked/throttled regions, e.g. China) ──────────────
