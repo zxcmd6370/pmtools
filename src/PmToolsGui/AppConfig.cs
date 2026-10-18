@@ -2,34 +2,34 @@ namespace PmToolsGui;
 
 /// <summary>
 /// Compiled-in client configuration. The Supabase URL and anon key are public
-/// client values (they also ship in the pmtools web bundle).
+/// client values (they also ship in the luatools web bundle).
 /// </summary>
 public static class AppConfig
 {
-    public const string SupabaseUrl = "https://db.pmtools";
+    public const string SupabaseUrl = "https://db.lua.tools";
 
     public const string SupabaseAnonKey =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NzYwMzkzNzYsImV4cCI6MTg5MzQ1NjAwMCwicm9sZSI6ImFub24iLCJpc3MiOiJzdXBhYmFzZSJ9.f_-K38u3odjltP-g_67FVmG32Vg-_-k-lNBvIaVUVBM";
 
-    public const string ApiBaseUrl = "https://pmtools";
+    public const string ApiBaseUrl = "https://lua.tools";
 
     // Bot-provisioned (Discord /login placeholder) accounts use this email domain. Detecting it on
-    // startup lets the app prompt the user to re-link their full pmtools account.
-    public const string BotAccountEmailDomain = "@bot.pmtools";
+    // startup lets the app prompt the user to re-link their full luatools account.
+    public const string BotAccountEmailDomain = "@bot.lua.tools";
 
     // Hubcap (hubcapmanifest.com): the app talks to this directly with the user's own API key
-    // (no pmtools proxy). Key + stats are managed in Settings; key-gated source downloads hit it.
+    // (no luatools proxy). Key + stats are managed in Settings; key-gated source downloads hit it.
     public const string HubcapBaseUrl = "https://hubcapmanifest.com";
 
     /// <summary>Must be registered in Supabase Auth → Redirect URLs.</summary>
     public const int OAuthCallbackPort = 53789;
     public const string OAuthCallbackUrl = "http://localhost:53789/callback";
 
-    // The standard pmtools daily download cap (Hubcap-keyed downloads are exempt). Hardcoded here
+    // The standard luatools daily download cap (Hubcap-keyed downloads are exempt). Hardcoded here
     // because the web app enforces it inline with no API field exposing it; change in one place if it moves.
     public const int DailyDownloadLimit = 25;
 
-    // Public upstream APIs the app calls directly (no pmtools proxy needed for guest browsing).
+    // Public upstream APIs the app calls directly (no luatools proxy needed for guest browsing).
     public const string SteamStoreSearchUrl = "https://store.steampowered.com/api/storesearch/";
     // Steam's storefront "featured categories" (top sellers, new releases, etc.). Drives the Add page's
     // featured strips. Public, no auth.
@@ -50,90 +50,47 @@ public static class AppConfig
     public const string CloudRedirectRepo = "Selectively11/CloudRedirect";
 
     // SteamAutoCrack: the Downloads page button fetches this release and launches its GUI.
-    //
-    // Three facts about the shipped asset drive how SteamAutoCrackService handles it:
-    //   * GUI ONLY. The release contains a single exe and no SteamAutoCrack.CLI.exe, and that GUI parses
-    //     no command-line arguments, so we can open it and nothing more. There is no way to drive a
-    //     crack from here; the user does everything in their own window.
-    //   * FRAMEWORK-DEPENDENT net10.0-windows. It is a single-file bundle but the runtime is NOT inside
-    //     it (no hostpolicy/coreclr/System.Private.CoreLib, no includedFrameworks), so the .NET 10
-    //     DESKTOP runtime must be present. We install it on demand via Velopack's Runtimes API.
-    //   * Its zip has a real directory TREE (Goldberg/, TEMP/ beside the exe), unlike the flat zip
-    //     DepotDownloaderService expects. Their exe resolves those paths from its own base directory,
-    //     so extract without flattening.
     public const string SteamAutoCrackRepo = "SteamAutoCracks/Steam-auto-crack";
 
     // DepotDownloaderMod: downloads raw depot content from Steam's CDN using depot keys + a local manifest.
-    // Powers the Depots page "Download" action.
-    //
-    // This is a RE-PACK we host ourselves, NOT the upstream SteamAutoCracks/DepotDownloaderMod repo, for two
-    // reasons: upstream ships its assets as `Release.rar` (System.IO.Compression cannot read RAR), and its
-    // build is framework-dependent net9.0 while this app is net8.0-windows, so users without the .NET 9
-    // runtime couldn't run it. Note that adding a RAR reader would fix only the FIRST of those.
-    //
-    // The re-pack is produced automatically by the `repack.yml` workflow in that repo: on each upstream
-    // release it rebuilds their source at that tag as a SELF-CONTAINED win-x64 publish and uploads a FLAT
-    // zip. Both properties are load-bearing for DepotDownloaderService.EnsureToolAsync, which takes the
-    // first `.zip` asset, extracts it straight into ToolDir, and then expects DepotDownloaderMod.exe at the
-    // archive ROOT (unlike PluginInstallerService, it has no single-top-level-folder hoisting).
     public const string DepotDownloaderRepo = "mendy-tools/DepotDownloaderMod";
     public const string ManifestBackendUrl = "http://167.235.229.108";
     public const string ManifestBackendUserAgent = "secretgoonpoon";
 
     // The donate-keys endpoint gates on a DIFFERENT User-Agent than the manifest backend (it 403s
-    // otherwise). This matches the PmTools plugin's config.USER_AGENT.
-    public const string DonateKeysUserAgent = "discord(dot)gg/pmtools";
+    // otherwise). This matches the LuaTools plugin's config.USER_AGENT.
+    public const string DonateKeysUserAgent = "discord(dot)gg/luatools";
 
     // ── Umami analytics (anonymous app-launch counting) ──────────────
-    public const string UmamiHost = "https://analytics.pmtools";
+    public const string UmamiHost = "https://analytics.lua.tools";
     public const string UmamiWebsiteId = "820d782c-a434-424f-9f90-dee83dc6032e";
-    public const string UmamiHostname = "desktop.pmtools";
+    public const string UmamiHostname = "desktop.lua.tools";
 
     /// <summary>
-    /// Public GitHub repos hosting Velopack release assets, in priority order. The auto-updater reads its
-    /// feed from the FIRST repo; if that whole repo is unreachable or gone (e.g. banned / DMCA'd / account
-    /// removed. A failure the GitHub proxy mirrors can't fix, since they'd still point at a dead repo), it
-    /// falls through to the next. Mirror repos are populated MANUALLY (re-upload the same Velopack assets to
-    /// the backup only if the primary goes down). Each is still individually proxied for blocked regions.
-    /// TODO: set the real primary repo before the first `vpk upload`; add a backup repo URL when one exists.
+    /// Public GitHub repos hosting Velopack release assets, in priority order.
     /// </summary>
     public static readonly string[] GithubReleasesRepos =
     [
         "https://github.com/madoiscool/PmTools",   // primary
-        "https://github.com/mendy-tools/PmTools",  // backup. Create this repo + re-upload the Velopack
-                                                    // assets ONLY if the primary goes down (404s harmlessly
-                                                    // until then; UpdateService just falls through past it).
+        "https://github.com/mendy-tools/PmTools",  // backup
     ];
 
     /// <summary>The primary releases repo (first in <see cref="GithubReleasesRepos"/>).</summary>
     public static string GithubReleasesRepo => GithubReleasesRepos[0];
 
-    // ── Plugin releases (the store-page plugin manager fetches these) ──────────────
-    // Separate from the app's own Velopack self-update repo above. Each release of this repo carries
-    // `plugin.zip` (the frontend) + `winmm.dll` (the loader); the tag is the version (e.g. "v1.2").
-    // Fetched + verified (by asset sha256 digest) through GithubProxy like everything else.
+    // ── Plugin releases ──────────────
     public const string PluginReleasesOwner = "zxcmd6370";
     public const string PluginReleasesRepo = "LTSP";
 
-    // ── GitHub proxy mirrors (for blocked/throttled regions, e.g. China) ──────────────
-    // github.com / api.github.com are often unreachable in some countries. Any GitHub request is tried
-    // DIRECT first, then prefixed onto the MATCHING mirrors ("<mirror>https://<github-url>") until one works.
-    // Two capability classes: GithubProxy.Candidates picks by URL so we never make a guaranteed-wasted hop
-    // (an API mirror 400s a download; a download mirror 403s the API):
-    //   • API metadata (api.github.com): ONLY our self-hosted pmtools/gh proxy can serve it. Server-side
-    //     PAT (60→5000/hr) + cache. No PUBLIC proxy serves the REST API (they all 403 it), so there's no
-    //     public backup here. Fixes the plugin release-metadata lookup in China / under rate-limit. 404s
-    //     harmlessly until the /api/gh route is deployed, then lights up automatically.
-    //   • Downloads (github.com releases / raw / objects): the public download proxies. pmtools/gh is
-    //     API-only (its route 400s downloads) so it is deliberately NOT in this list.
+    // ── GitHub proxy mirrors ──────────────
     public static readonly string[] GithubApiMirrors =
     [
-        "https://pmtools/api/gh/",   // self-hosted route (src/app/api/gh/[...rest]): proxies api.github.com with our PAT
+        "https://lua.tools/api/gh/",
     ];
     public static readonly string[] GithubDownloadMirrors =
     [
-        "https://ghproxy.net/",    // download-only (verified live 2026-07)
-        "https://ghfast.top/",     // download-only
-        "https://gh.ddlc.top/",    // download-only
+        "https://ghproxy.net/",
+        "https://ghfast.top/",
+        "https://gh.ddlc.top/",
     ];
 }
